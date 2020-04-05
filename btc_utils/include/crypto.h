@@ -27,6 +27,12 @@ public:
 
 class pub_key_t
 {
+public:
+   static constexpr unsigned int SIZE                   = 65;
+   static constexpr unsigned int COMPRESSED_SIZE        = 33;
+   static constexpr unsigned int SIGNATURE_SIZE         = 72;
+   static constexpr unsigned int COMPACT_SIGNATURE_SIZE = 65;
+
 private:
     std::array<unsigned char, 65> data_;
 
@@ -44,6 +50,10 @@ private:
         data_[0] = 0xff;
     }
 public:
+    bool static valid_size(const std::vector<unsigned char> &vch) {
+      return vch.size() > 0 && get_len(vch[0]) == vch.size();
+    }
+
     pub_key_t()
     {
         invalidate();

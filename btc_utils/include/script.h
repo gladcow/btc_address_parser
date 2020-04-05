@@ -21,7 +21,8 @@ enum txnouttype
     TX_WITNESS_UNKNOWN, //!< Only for Witness versions not already defined above
 };
 
-txnouttype solver(const std::vector<unsigned char>& script, std::vector<pub_key_t>& keys);
+txnouttype solver(const std::vector<unsigned char>& script,
+                  std::vector<std::vector<unsigned char>>& solutions);
 
 }
 

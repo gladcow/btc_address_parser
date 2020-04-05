@@ -6,11 +6,12 @@ namespace btc_utils {
 
 std::vector<std::string> tx_out_t::addresses() const
 {
-   std::vector<pub_key_t> keys;
+   std::vector<std::vector<unsigned char>> keys;
    txnouttype out_type = solver(scriptPubKey, keys);
    std::vector<std::string> res;
 
-/*   if (out_type == TX_PUBKEY) {
+   /*
+   if (out_type == TX_PUBKEY) {
        res.push_back(PKHash(keys[0]));
    }
    else if (out_type == TX_PUBKEYHASH)
@@ -19,7 +20,7 @@ std::vector<std::string> tx_out_t::addresses() const
    }
    else if (out_type == TX_SCRIPTHASH)
    {
-       res.push_back(ScriptHash(uint160(keys[0]));
+       res.push_back(ScriptHash(keys[0]));
    }
    else if (out_type == TX_WITNESS_V0_KEYHASH)
    {
@@ -37,7 +38,8 @@ std::vector<std::string> tx_out_t::addresses() const
        unk.length = vSolutions[1].size();
        res.push_back(unk);
    }
-*/
+   */
+
    return res;
 }
 
