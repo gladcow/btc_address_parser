@@ -50,6 +50,16 @@ std::string encode_base58(const std::vector<unsigned char>& data)
     return str;
 }
 
+std::string encode_base58_check(const std::vector<unsigned char> &data)
+{
+   // add 4-byte hash check to the end
+   std::vector<unsigned char> vch(data);
+   uint256_t tmp = hash_sha256(vch);
+   uint256_t h = hash_sha256(std::vector<unsigned char>(tmp.begin(), tmp.end()));
+   vch.insert(vch.end(), &h[0], &h[0] + 4);
+   return encode_base58(vch);
+}
+
 uint256_t hash_sha256(const std::vector<unsigned char> &data)
 {
     SHA256_CTX sha256;

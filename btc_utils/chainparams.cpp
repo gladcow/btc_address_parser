@@ -32,4 +32,48 @@ const start_marker_t& message_start()
    throw std::runtime_error("Unknown network type");
 }
 
+std::vector<unsigned char> base_58_pubkey_address_prefix()
+{
+   switch(g_network)
+   {
+   case(network_t::mainnet):
+      return {1, 0};
+   case(network_t::testnet):
+      return {1, 111};
+   case(network_t::regtest):
+      return {1, 111};
+   }
+   throw std::runtime_error("Unknown network type");
+}
+
+std::vector<unsigned char> base_58_script_address_prefix()
+{
+   switch(g_network)
+   {
+   case(network_t::mainnet):
+      return {1, 5};
+   case(network_t::testnet):
+      return {1, 196};
+   case(network_t::regtest):
+      return {1, 196};
+   }
+   throw std::runtime_error("Unknown network type");
+}
+
+std::string bech32_hrp()
+{
+   switch(g_network)
+   {
+   case(network_t::mainnet):
+      return "bc";
+   case(network_t::testnet):
+      return "tb";
+   case(network_t::regtest):
+      return "bcrt";
+   }
+   throw std::runtime_error("Unknown network type");
+}
+
+
+
 }

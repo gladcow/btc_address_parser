@@ -14,6 +14,7 @@ uint256_t hash_sha256(const std::vector<unsigned char>& data);
 uint160_t hash_ripemd160(const std::vector<unsigned char>& data);
 
 std::string encode_base58(const std::vector<unsigned char>& data);
+std::string encode_base58_check(const std::vector<unsigned char>& data);
 
 uint256_t uint256_from_hex(const std::string& hex);
 std::string uint256_to_hex(const uint256_t& v);
