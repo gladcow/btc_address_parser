@@ -126,6 +126,21 @@ uint256_t uint256_from_hex(const std::string& hex)
     return res;
 }
 
+std::string uint256_to_hex(const uint256_t& v)
+{
+   std::string rv;
+   static const char hexmap[16] = { '0', '1', '2', '3', '4', '5', '6', '7',
+                                    '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+   rv.reserve(v.size() * 2);
+   for(auto c = v.rend(); c != v.rbegin(); c++)
+   {
+       unsigned char val = *c;
+       rv.push_back(hexmap[val>>4]);
+       rv.push_back(hexmap[val&15]);
+   }
+   return rv;
+}
+
 pub_key_t priv_key_t::get_pub_key() const
 {
     std::unique_ptr<BN_CTX, decltype(&BN_CTX_free)> ctx(
