@@ -281,7 +281,7 @@ public:
     }
 };
 
-void ParseBlockFile(FILE* f, int& nLoaded)
+void ParseBlockFile(FILE* f, int& nLoaded, FILE* addrout)
 {
    try {
        // This takes over fileIn and calls fclose() on it in the CBufferedFile destructor
@@ -317,20 +317,22 @@ void ParseBlockFile(FILE* f, int& nLoaded)
                blkdat >> block;
                nRewind = blkdat.GetPos();
 
-               log_printf("Has %i txes", block.txes_.size());
                for(const auto& tx: block.txes_)
                {
-                  log_printf("tx has %i outputs", tx.vout.size());
                   for(const auto& out: tx.vout)
                   {
                      std::vector<std::string> addrs = out.addresses();
                      for(const auto& addr: addrs)
-                        log_printf(addr.c_str());
+                     {
+                        fwrite(addr.c_str(), 1, addr.size(), addrout);
+                        fwrite("\n", 1, 1, addrout);
+                     }
                   }
                }
-               log_printf("Block %i is read", nLoaded++);
+               if(nLoaded % 100 == 1)
+                  log_printf("Block %i is read", nLoaded++);
            } catch (const std::exception& e) {
-               log_printf("%s: Deserialize or I/O error - %s\n", __func__, e.what());
+               log_printf("%s: Deserialize or I/O error - %s", __func__, e.what());
            }
        }
    } catch (const std::runtime_error& e) {
@@ -341,11 +343,16 @@ void ParseBlockFile(FILE* f, int& nLoaded)
 int main()
 {
    std::string db_path = "/home/sergey/.bitcoin/testnet3/blocks";
+   std::string out_file = "addresses.txt";
    unsigned int nFile = 0;
    int blocks = 0;
+   FILE* out = fopen(out_file.c_str(), "w");
+   if (!out) {
+       log_printf("Error: Unable to open file %s\n", out_file);
+       return 1;
+   }
    while (true) {
        boost::filesystem::path block_file = compose_block_file_path(db_path, nFile);
-       log_printf("Indexing %s...", block_file.string());
        if (!boost::filesystem::exists(block_file))
        {
            log_printf("no such file");
@@ -356,10 +363,12 @@ int main()
            log_printf("Error: Unable to open file %s\n", block_file.string());
            break;
        }
-       log_printf("Reindexing block file blk%05u.dat...\n", nFile);
-       ParseBlockFile(file, blocks);
+       log_printf("Processing block file blk%05u.dat...", nFile);
+       ParseBlockFile(file, blocks, out);
        nFile++;
+       fflush(out);
    }
-   log_printf("Reindexing finished\n");
+   fclose(out);
+   log_printf("Processing finished");
    return 0;
 }
