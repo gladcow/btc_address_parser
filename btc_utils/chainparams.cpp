@@ -37,11 +37,11 @@ std::vector<unsigned char> base_58_pubkey_address_prefix()
    switch(g_network)
    {
    case(network_t::mainnet):
-      return {1, 0};
+      return {0};
    case(network_t::testnet):
-      return {1, 111};
+      return {111};
    case(network_t::regtest):
-      return {1, 111};
+      return {111};
    }
    throw std::runtime_error("Unknown network type");
 }
@@ -51,11 +51,11 @@ std::vector<unsigned char> base_58_script_address_prefix()
    switch(g_network)
    {
    case(network_t::mainnet):
-      return {1, 5};
+      return {5};
    case(network_t::testnet):
-      return {1, 196};
+      return {196};
    case(network_t::regtest):
-      return {1, 196};
+      return {196};
    }
    throw std::runtime_error("Unknown network type");
 }

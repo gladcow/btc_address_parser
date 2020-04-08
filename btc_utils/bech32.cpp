@@ -156,8 +156,8 @@ std::string Encode(const std::string& hrp, const data& values) {
     // to return a lowercase Bech32 string, but if given an uppercase HRP, the
     // result will always be invalid.
     for (const char& c : hrp) {
-       if (c < 'A' || c > 'Z')
-          throw std::runtime_error("Invalid HRP in bech32 address");
+       if (c >= 'A' && c <= 'Z')
+          throw std::runtime_error("Invalid HRP in bech32 address: " + hrp);
     }
     data checksum = CreateChecksum(hrp, values);
     data combined = Cat(values, checksum);

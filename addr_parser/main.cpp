@@ -317,8 +317,10 @@ void ParseBlockFile(FILE* f, int& nLoaded)
                blkdat >> block;
                nRewind = blkdat.GetPos();
 
+               log_printf("Has %i txes", block.txes_.size());
                for(const auto& tx: block.txes_)
                {
+                  log_printf("tx has %i outputs", tx.vout.size());
                   for(const auto& out: tx.vout)
                   {
                      std::vector<std::string> addrs = out.addresses();
