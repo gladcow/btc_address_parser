@@ -3,6 +3,7 @@
 #include <crypto.h>
 #include <array>
 #include <cstring>
+#include <unistd.h>
 #include "tinyformat.h"
 
 using namespace btc_utils;
@@ -345,10 +346,70 @@ void ParseBlockFile(FILE* f, int& nLoaded, FILE* addrout)
    }
 }
 
-int main(int ac, char* av[])
+void print_usage()
 {
-   std::string db_path = "/home/sergey/.bitcoin/testnet3/blocks";
+   std::cout << "Usage:" << std::endl;
+   std::cout << "addr_parser [-m|-t|-r] [-p db_path] [-o output_file]" << std::endl;
+   std::cout << "where" << std::endl;
+   std::cout << "-m - parse BTC mainnet data, default option" << std::endl;
+   std::cout << "-t - parse BTC testnet data" << std::endl;
+   std::cout << "-r - parse BTC regtest data" << std::endl;
+   std::cout << "db_path - path to the directory with block files (e.g. ${HOME}/.bitcoin/blocks),  default value is current directory" << std::endl;
+   std::cout << "output_file - file to write parsed addresses, default value addresses.txt" << std::endl;
+}
+
+int main(int argc, char* argv[])
+{
+   std::string db_path;
    std::string out_file = "addresses.txt";
+   char c;
+   bool option_found = false;
+
+   while ((c = getopt(argc, argv, "mtrp:o:?")) != -1)
+   {
+     switch (c)
+     {
+         case 'm':
+            btc_utils::g_network = btc_utils::network_t::mainnet;
+            break;
+         case 't':
+            btc_utils::g_network = btc_utils::network_t::testnet;
+            break;
+         case 'r':
+            btc_utils::g_network = btc_utils::network_t::regtest;
+            break;
+         case 'p':
+            if (!optarg)
+            {
+               std::cout << "p option requires argument" << std::endl;
+               print_usage();
+               return 1;
+            }
+            db_path = optarg;
+            break;
+         case 'o':
+           if (!optarg)
+           {
+              std::cout << "o option requires argument" << std::endl;
+              print_usage();
+              return 1;
+           }
+            out_file = optarg;
+            break;
+         case '?':
+            print_usage();
+            return 1;
+         default:
+            print_usage();
+            return 1;
+      }
+   }
+   if (optind < argc)
+   {
+      print_usage();
+      return 1;
+   }
+
    unsigned int nFile = 0;
    int blocks = 0;
    FILE* out = fopen(out_file.c_str(), "w");

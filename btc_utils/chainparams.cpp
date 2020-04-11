@@ -4,7 +4,7 @@
 namespace btc_utils
 {
 
-network_t g_network = network_t::testnet;
+network_t g_network = network_t::mainnet;
 
 /** The maximum allowed size for a serialized block, in bytes (only for buffer size limits) */
 const unsigned int MAX_BLOCK_SERIALIZED_SIZE = 4000000;
