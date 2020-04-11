@@ -2,7 +2,7 @@
 Loads all addresses from local bitcoin blockchain data
 
 # dependencies
-Boost,  OpenSSL
+OpenSSL
 
 # build 
 ```

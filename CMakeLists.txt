@@ -26,12 +26,6 @@ endif()
 find_package( OpenSSL )
 include_directories(${OPENSSL_INCLUDE_DIR})
 
-# BOOST depenency
-set(Boost_USE_STATIC_LIBS OFF)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-FIND_PACKAGE(Boost 1.52 REQUIRED COMPONENTS system filesystem)
-
 # btcutils library
 add_subdirectory(btc_utils)
 

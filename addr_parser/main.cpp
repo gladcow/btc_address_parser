@@ -2,7 +2,7 @@
 #include <chainparams.h>
 #include <crypto.h>
 #include <array>
-#include <boost/filesystem.hpp>
+#include <cstring>
 #include "tinyformat.h"
 
 using namespace btc_utils;
@@ -22,9 +22,14 @@ static inline void log_printf(const char* fmt, const Args&... args)
      std::cout << log_msg << std::endl;
 }
 
-boost::filesystem::path compose_block_file_path(boost::filesystem::path db_path, uint32_t index)
+std::string compose_block_file_path(std::string db_path, uint32_t index)
 {
-   return db_path / strprintf("%s%05u.dat", "blk", index);
+   std::string fname = strprintf("%s%05u.dat", "blk", index);
+   if(db_path.empty())
+      return fname;
+   if(db_path.back() == '/')
+      return db_path + fname;
+   return db_path + "/" + fname;
 }
 
 /** Non-refcounted RAII wrapper around a FILE* that implements a ring buffer to
@@ -340,7 +345,7 @@ void ParseBlockFile(FILE* f, int& nLoaded, FILE* addrout)
    }
 }
 
-int main()
+int main(int ac, char* av[])
 {
    std::string db_path = "/home/sergey/.bitcoin/testnet3/blocks";
    std::string out_file = "addresses.txt";
@@ -352,15 +357,10 @@ int main()
        return 1;
    }
    while (true) {
-       boost::filesystem::path block_file = compose_block_file_path(db_path, nFile);
-       if (!boost::filesystem::exists(block_file))
-       {
-           log_printf("no such file");
-           break; // No block files left to reindex
-       }
+       std::string block_file = compose_block_file_path(db_path, nFile);
        FILE* file = fopen(block_file.c_str(), "rb");
        if (!file) {
-           log_printf("Error: Unable to open file %s\n", block_file.string());
+           log_printf("Error: Unable to open file %s\n", block_file.c_str());
            break;
        }
        log_printf("Processing block file blk%05u.dat...", nFile);
