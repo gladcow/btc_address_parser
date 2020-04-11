@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required (VERSION 3.2)
 
 project (btc_address_parser VERSION 1.0 LANGUAGES CXX)
 
@@ -30,7 +30,7 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF)
-FIND_PACKAGE(Boost 1.67 REQUIRED COMPONENTS system filesystem)
+FIND_PACKAGE(Boost 1.52 REQUIRED COMPONENTS system filesystem)
 
 # btcutils library
 add_subdirectory(btc_utils)
