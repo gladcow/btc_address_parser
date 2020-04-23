@@ -1,6 +1,9 @@
 # btc_address_parser
 Loads all addresses from local bitcoin blockchain data
 
+# license
+MIT
+
 # dependencies
 OpenSSL
 

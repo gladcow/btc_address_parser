@@ -1,3 +1,7 @@
+// Copyright (c) 2020 gladcow
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #ifndef BTC_UTILS_CHAINPARAMS_H__
 #define BTC_UTILS_CHAINPARAMS_H__
 
