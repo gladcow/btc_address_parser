@@ -108,6 +108,45 @@ signed char HexDigit(char c)
     return p_util_hexdigit[static_cast<unsigned char>(c)];
 }
 
+std::vector<unsigned char> from_hex(const std::string& hex)
+{
+    if(hex.length() % 2 != 0)
+        throw std::runtime_error("Invalid hex string size");
+    std::vector<unsigned char> res;
+    res.resize(hex.length() / 2);
+    auto it = hex.begin();
+    size_t count = 0;
+    static signed char failed = static_cast<signed char>(-1);
+    while (it != hex.end())
+    {
+        signed char c = HexDigit(*it++);
+        if (c == failed)
+            throw std::runtime_error("Invalid symbol in hex string");
+        unsigned char n = static_cast<unsigned char>(c << 4);
+        c = HexDigit(*it++);
+        if (c == failed)
+            throw std::runtime_error("Invalid symbol in hex string");
+        n = static_cast<unsigned char>(n | c);
+        res[count++] = n;
+    }
+    return res;
+}
+
+std::string to_hex(const std::vector<unsigned char>& v)
+{
+    std::string rv;
+    static const char hexmap[16] = { '0', '1', '2', '3', '4', '5', '6', '7',
+                                     '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+    rv.reserve(v.size() * 2);
+    for(auto c = v.rend(); c != v.rbegin(); c++)
+    {
+        unsigned char val = *c;
+        rv.push_back(hexmap[val>>4]);
+        rv.push_back(hexmap[val&15]);
+    }
+    return rv;
+}
+
 uint256_t uint256_from_hex(const std::string& hex)
 {
     if(hex.length() != 64u)

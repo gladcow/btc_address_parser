@@ -15,14 +15,17 @@ namespace btc_utils
 typedef std::array<unsigned char,  20> uint160_t;
 typedef std::array<unsigned char,  32> uint256_t;
 
+std::vector<unsigned char> from_hex(const std::string& hex);
+std::string to_hex(const std::vector<unsigned char>& v);
+
+uint256_t uint256_from_hex(const std::string& hex);
+std::string uint256_to_hex(const uint256_t& v);
+
 uint256_t hash_sha256(const std::vector<unsigned char>& data);
 uint160_t hash_ripemd160(const std::vector<unsigned char>& data);
 
 std::string encode_base58(const std::vector<unsigned char>& data);
 std::string encode_base58_check(const std::vector<unsigned char>& data);
-
-uint256_t uint256_from_hex(const std::string& hex);
-std::string uint256_to_hex(const uint256_t& v);
 
 class key_id_t: public uint160_t
 {
